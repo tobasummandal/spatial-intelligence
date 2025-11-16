@@ -1,0 +1,179 @@
+{
+  "image_summary": "A stylized 3D model depicting a caterpillar on an apple, rendered from multiple angles. The composition shows a segmented green caterpillar with a dark head positioned on top of a red apple, with additional elements including green leaves, clouds, and a curved tunnel or hole through the apple creating a rainbow-like layered effect.",
+  "objects": [
+    {
+      "label": "caterpillar",
+      "bbox": [
+        185,
+        120,
+        345,
+        200
+      ],
+      "attributes": [
+        "green segmented body",
+        "dark rounded head",
+        "curved posture",
+        "cartoon style",
+        "approximately 5-6 body segments"
+      ]
+    },
+    {
+      "label": "apple",
+      "bbox": [
+        195,
+        150,
+        420,
+        430
+      ],
+      "attributes": [
+        "red colored",
+        "large cylindrical/oval shape",
+        "has tunnel/hole through center",
+        "dominant object in scene"
+      ]
+    },
+    {
+      "label": "leaf",
+      "bbox": [
+        240,
+        230,
+        270,
+        280
+      ],
+      "attributes": [
+        "green color",
+        "pointed shape",
+        "attached to apple"
+      ]
+    },
+    {
+      "label": "cloud formations",
+      "bbox": [
+        180,
+        185,
+        220,
+        230
+      ],
+      "attributes": [
+        "spherical shapes",
+        "green colored",
+        "floating near caterpillar"
+      ]
+    },
+    {
+      "label": "tunnel layers",
+      "bbox": [
+        220,
+        200,
+        380,
+        350
+      ],
+      "attributes": [
+        "concentric rings",
+        "multi-colored (red, green, blue)",
+        "creates rainbow effect",
+        "hollow center"
+      ]
+    },
+    {
+      "label": "bottom cloud mass",
+      "bbox": [
+        180,
+        330,
+        280,
+        430
+      ],
+      "attributes": [
+        "gray colored",
+        "large rounded form",
+        "positioned at base"
+      ]
+    },
+    {
+      "label": "yellow-brown spherical object",
+      "bbox": [
+        195,
+        340,
+        245,
+        380
+      ],
+      "attributes": [
+        "golden brown color",
+        "spherical shape",
+        "small size"
+      ]
+    }
+  ],
+  "spatial_relationships": [
+    {
+      "a": "caterpillar",
+      "b": "apple",
+      "relation": "positioned on top of and curves around the upper portion"
+    },
+    {
+      "a": "leaf",
+      "b": "apple",
+      "relation": "attached to the side/middle section"
+    },
+    {
+      "a": "tunnel layers",
+      "b": "apple",
+      "relation": "cut through the center creating concentric rings"
+    },
+    {
+      "a": "cloud formations",
+      "b": "caterpillar",
+      "relation": "floating near the head of the caterpillar"
+    },
+    {
+      "a": "bottom cloud mass",
+      "b": "apple",
+      "relation": "positioned at the base beneath the apple"
+    },
+    {
+      "a": "yellow-brown spherical object",
+      "b": "bottom cloud mass",
+      "relation": "adjacent to and partially overlapping"
+    }
+  ],
+  "room_layout_estimate": {
+    "primary_zones": [
+      {
+        "zone": "central display area",
+        "objects": [
+          "apple",
+          "caterpillar",
+          "tunnel layers"
+        ]
+      },
+      {
+        "zone": "upper accent area",
+        "objects": [
+          "cloud formations",
+          "caterpillar head"
+        ]
+      },
+      {
+        "zone": "lower base area",
+        "objects": [
+          "bottom cloud mass",
+          "yellow-brown spherical object"
+        ]
+      }
+    ],
+    "dominant_orientation": "vertical composition with caterpillar arching over apple",
+    "walkable_area_pixels": 0
+  },
+  "captioning_enhanced_insights": {
+    "probable_activity": "Artistic representation or educational model depicting the classic children's story 'The Very Hungry Caterpillar' eating through an apple",
+    "tidiness_level": "organized artistic composition",
+    "lighting_condition": "studio lighting with neutral background, soft shadows, and some darker areas emphasizing depth",
+    "functional_affordances": [
+      "educational display piece",
+      "children's story visualization",
+      "decorative 3D model",
+      "animation or illustration asset"
+    ]
+  },
+  "version": "2.1.0"
+}

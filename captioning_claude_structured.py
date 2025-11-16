@@ -43,12 +43,19 @@ def get_image_paths(folder_path, num_views=6, use_diffurank=True):
             print(f"Warning: Could not load diffurank scores: {e}")
             image_paths = []
     
-    # Fallback: use first num_views images
+    # Fallback: use sequentially numbered files (00000.png...)
     if not image_paths:
         for i in range(num_views):
             img_path = os.path.join(folder_path, '%05d.png' % i)
             if os.path.exists(img_path):
                 image_paths.append(img_path)
+    
+    # Final fallback: grab actual files present regardless of numbering
+    if not image_paths:
+        all_images = sorted(glob.glob(os.path.join(folder_path, '*.png')))
+        if not all_images:
+            all_images = sorted(glob.glob(os.path.join(folder_path, '*.jpg')))
+        image_paths = all_images[:num_views]
     
     return image_paths
 
@@ -167,8 +174,15 @@ def main():
                        help="Path to JSON template file")
     parser.add_argument('--template_json', type=str, default=None,
                        help="Inline JSON template string (overrides template_file)")
-    parser.add_argument('--model', type=str, default='claude-3-5-sonnet-20241022',
-                       choices=['claude-3-5-sonnet-20241022', 'claude-3-opus-20240229', 'claude-3-sonnet-20240229'],
+    parser.add_argument('--model', type=str, default='claude-3-5-sonnet-latest',
+                       choices=[
+                           'claude-3-5-sonnet-latest',
+                           'claude-3-5-haiku-latest',
+                           'claude-3-opus-20240229',
+                           'claude-3-sonnet-20240229',
+                           'claude-3-haiku-20240307',
+                           'claude-sonnet-4-5-20250929'
+                       ],
                        help="Claude model to use")
     parser.add_argument('--num_views', type=int, default=6,
                        help="Number of views to send to Claude")

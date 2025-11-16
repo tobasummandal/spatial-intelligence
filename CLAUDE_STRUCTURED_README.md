@@ -43,7 +43,7 @@ python captioning_claude_structured.py \
   --api_key "YOUR_CLAUDE_API_KEY" \
   --parent_dir ./example_material \
   --template_file ./example_template.json \
-  --model claude-3-5-sonnet-20241022 \
+  --model claude-3-5-sonnet-latest \
   --num_views 6 \
   --use_diffurank \
   --max_tokens 4096 \
@@ -57,8 +57,8 @@ python captioning_claude_structured.py \
 - `--parent_dir`: Parent directory containing Cap3D_imgs folder (default: `./example_material`)
 - `--template_file`: Path to JSON template file (default: `./example_template.json`)
 - `--template_json`: Inline JSON template string (overrides template_file)
-- `--model`: Claude model to use (default: `claude-3-5-sonnet-20241022`)
-  - Options: `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`, `claude-3-sonnet-20240229`
+- `--model`: Claude model to use (default: `claude-3-5-sonnet-latest`)
+  - Options: `claude-3-5-sonnet-latest`, `claude-3-5-haiku-latest`, `claude-3-opus-20240229`, `claude-3-sonnet-20240229`, `claude-3-haiku-20240307`, `claude-sonnet-4-5-20250929`
 - `--num_views`: Number of views to send (default: 6)
 - `--use_diffurank`: Use DiffuRank scores if available (default: true)
 - `--no_diffurank`: Don't use DiffuRank scores
@@ -74,19 +74,19 @@ Example template (`example_template.json`):
 
 ```json
 {
-  "image_summary": "A description of the overall scene",
+  "image_summary": "",
   "objects": [
     {
-      "label": "object_name",
-      "bbox": [x_min, y_min, x_max, y_max],
-      "attributes": ["attribute1", "attribute2"]
+      "label": "",
+      "bbox": [0, 0, 0, 0],
+      "attributes": []
     }
   ],
   "spatial_relationships": [
     {
-      "a": "object1",
-      "b": "object2",
-      "relation": "relation_type"
+      "a": "",
+      "b": "",
+      "relation": ""
     }
   ]
 }

@@ -126,7 +126,7 @@ def run_script():
         python_cmd, 'captioning_claude_structured.py',
         '--api_key', data['api_key'],
         '--parent_dir', data.get('parent_dir', './example_material'),
-        '--model', data.get('model', 'claude-3-5-sonnet-20241022'),
+        '--model', data.get('model', 'claude-3-5-sonnet-latest'),
         '--num_views', str(data.get('num_views', 6)),
         '--max_tokens', str(data.get('max_tokens', 4096)),
         '--rate_limit_delay', str(data.get('rate_limit_delay', 1.0))
@@ -202,5 +202,5 @@ def stop_script():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5001)
 

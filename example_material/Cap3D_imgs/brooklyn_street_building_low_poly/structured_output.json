@@ -1,0 +1,127 @@
+{
+  "image_summary": "A black industrial electronic control unit or PLC (Programmable Logic Controller) module shown from multiple angles. The device features a modular design with stacked rectangular sections, mounting tabs on top, connection ports or slots on the front face, and what appears to be a small label or indicator on one side panel. The unit has a professional industrial appearance with clean geometric lines.",
+  "objects": [
+    {
+      "label": "PLC Control Module - Main Body",
+      "bbox": [
+        50,
+        110,
+        495,
+        480
+      ],
+      "attributes": [
+        "black matte finish",
+        "rectangular modular design",
+        "industrial grade construction",
+        "multiple stacked sections"
+      ]
+    },
+    {
+      "label": "Mounting Tabs",
+      "bbox": [
+        140,
+        108,
+        420,
+        125
+      ],
+      "attributes": [
+        "top-mounted",
+        "black plastic or metal",
+        "multiple mounting points",
+        "protruding design"
+      ]
+    },
+    {
+      "label": "Connection Ports Panel",
+      "bbox": [
+        150,
+        200,
+        480,
+        450
+      ],
+      "attributes": [
+        "front-facing",
+        "multiple rectangular slots",
+        "organized in grid pattern",
+        "recessed openings"
+      ]
+    },
+    {
+      "label": "Side Access Door/Panel",
+      "bbox": [
+        50,
+        150,
+        150,
+        350
+      ],
+      "attributes": [
+        "left side mounted",
+        "rectangular access points",
+        "two visible openings",
+        "flush design"
+      ]
+    },
+    {
+      "label": "Label/Indicator",
+      "bbox": [
+        420,
+        275,
+        460,
+        290
+      ],
+      "attributes": [
+        "small rectangular shape",
+        "golden or yellow colored",
+        "side-mounted",
+        "identification or status indicator"
+      ]
+    }
+  ],
+  "spatial_relationships": [
+    {
+      "a": "Mounting Tabs",
+      "b": "Main Body",
+      "relation": "positioned on top of"
+    },
+    {
+      "a": "Connection Ports Panel",
+      "b": "Main Body",
+      "relation": "integrated into front face of"
+    },
+    {
+      "a": "Side Access Door/Panel",
+      "b": "Main Body",
+      "relation": "attached to left side of"
+    },
+    {
+      "a": "Label/Indicator",
+      "b": "Side Access Door/Panel",
+      "relation": "mounted on"
+    }
+  ],
+  "room_layout_estimate": {
+    "primary_zones": [
+      {
+        "zone": "Industrial Equipment Display",
+        "objects": [
+          "PLC Control Module"
+        ]
+      }
+    ],
+    "dominant_orientation": "front-facing with left side visible in primary view",
+    "walkable_area_pixels": 0
+  },
+  "captioning_enhanced_insights": {
+    "probable_activity": "Industrial automation and control system operation, electrical signal processing and equipment control",
+    "tidiness_level": "pristine - appears to be new or well-maintained industrial equipment",
+    "lighting_condition": "neutral studio lighting showing object details clearly against white background",
+    "functional_affordances": [
+      "mounting to control panels or racks via top tabs",
+      "electrical connections through multiple port openings",
+      "modular expansion or configuration",
+      "side access for maintenance or wiring",
+      "industrial control and automation tasks"
+    ]
+  },
+  "version": "2.1.0"
+}

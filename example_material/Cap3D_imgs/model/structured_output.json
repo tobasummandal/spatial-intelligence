@@ -1,0 +1,95 @@
+{
+  "image_summary": "A damaged or destroyed dark-colored rectangular structure, possibly a building or large container, shown from multiple angles. The object appears to have sustained significant damage with irregular edges, debris, and what looks like battle or destruction damage. The structure has multiple horizontal layers or floors visible, with a small opening or window visible on one face. The object is rendered in dark tones (black/dark gray) against a light background.",
+  "objects": [
+    {
+      "label": "damaged_structure",
+      "bbox": [
+        95,
+        55,
+        425,
+        495
+      ],
+      "attributes": [
+        "dark_colored",
+        "rectangular",
+        "multi_layered",
+        "damaged_edges",
+        "destroyed_sections",
+        "debris_visible",
+        "weathered_appearance"
+      ]
+    },
+    {
+      "label": "opening_or_window",
+      "bbox": [
+        220,
+        370,
+        250,
+        395
+      ],
+      "attributes": [
+        "small",
+        "rectangular",
+        "centered_on_face",
+        "light_interior"
+      ]
+    },
+    {
+      "label": "top_debris",
+      "bbox": [
+        190,
+        55,
+        425,
+        85
+      ],
+      "attributes": [
+        "irregular_shape",
+        "damaged_material",
+        "protruding_elements"
+      ]
+    }
+  ],
+  "spatial_relationships": [
+    {
+      "a": "opening_or_window",
+      "b": "damaged_structure",
+      "relation": "centered on the front face of the structure, positioned in the middle-lower section"
+    },
+    {
+      "a": "top_debris",
+      "b": "damaged_structure",
+      "relation": "located at the uppermost part of the structure, appearing as damaged or destroyed top section"
+    }
+  ],
+  "room_layout_estimate": {
+    "primary_zones": [
+      {
+        "zone": "main_structure",
+        "objects": [
+          "damaged_structure",
+          "opening_or_window"
+        ]
+      },
+      {
+        "zone": "damaged_top_section",
+        "objects": [
+          "top_debris"
+        ]
+      }
+    ],
+    "dominant_orientation": "vertical_rectangular_standing",
+    "walkable_area_pixels": 0
+  },
+  "captioning_enhanced_insights": {
+    "probable_activity": "This appears to be a destroyed or heavily damaged building structure, possibly from warfare, disaster, or decay. The object serves as a representation of structural damage or ruins.",
+    "tidiness_level": "destroyed/heavily_damaged",
+    "lighting_condition": "neutral studio lighting with even illumination against white background",
+    "functional_affordances": [
+      "visual representation of damage",
+      "architectural ruin model",
+      "gaming or simulation asset",
+      "historical or disaster documentation"
+    ]
+  },
+  "version": "2.1.0"
+}

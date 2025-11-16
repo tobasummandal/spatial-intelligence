@@ -1,0 +1,94 @@
+{
+  "image_summary": "A 3D rendered composition showing three produce items: a large dark green watermelon with characteristic striping, a smaller light green melon or squash, and what appears to be dark brown mushrooms. The objects are arranged in a clustered still-life composition against a white background, shown from multiple viewing angles.",
+  "objects": [
+    {
+      "label": "watermelon",
+      "bbox": [
+        200,
+        170,
+        370,
+        360
+      ],
+      "attributes": [
+        "large",
+        "spherical",
+        "dark green",
+        "striped pattern",
+        "matte texture"
+      ]
+    },
+    {
+      "label": "small melon or squash",
+      "bbox": [
+        205,
+        270,
+        310,
+        360
+      ],
+      "attributes": [
+        "small",
+        "round",
+        "light green",
+        "textured surface",
+        "stem visible"
+      ]
+    },
+    {
+      "label": "mushrooms",
+      "bbox": [
+        160,
+        280,
+        220,
+        350
+      ],
+      "attributes": [
+        "clustered group",
+        "dark brown",
+        "rounded caps",
+        "organic shape"
+      ]
+    }
+  ],
+  "spatial_relationships": [
+    {
+      "a": "watermelon",
+      "b": "small melon",
+      "relation": "positioned behind and to the right"
+    },
+    {
+      "a": "mushrooms",
+      "b": "watermelon",
+      "relation": "positioned to the left and in front"
+    },
+    {
+      "a": "small melon",
+      "b": "mushrooms",
+      "relation": "positioned to the right of"
+    }
+  ],
+  "room_layout_estimate": {
+    "primary_zones": [
+      {
+        "zone": "product display area",
+        "objects": [
+          "watermelon",
+          "small melon",
+          "mushrooms"
+        ]
+      }
+    ],
+    "dominant_orientation": "centered frontal view",
+    "walkable_area_pixels": 0
+  },
+  "captioning_enhanced_insights": {
+    "probable_activity": "product visualization or food photography",
+    "tidiness_level": "organized",
+    "lighting_condition": "studio lighting with neutral background",
+    "functional_affordances": [
+      "food items suitable for cooking or consumption",
+      "produce display",
+      "3D asset for game or application"
+    ]
+  },
+  "version": "2.1.0"
+}

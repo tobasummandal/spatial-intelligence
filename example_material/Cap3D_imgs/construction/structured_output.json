@@ -1,0 +1,114 @@
+{
+  "image_summary": "A 3D rendered damaged or destroyed floor section shown from multiple viewing angles. The structure appears to be a dark gray/black floor panel with significant damage including holes, torn edges, and structural deterioration. The object has an irregular perimeter with jagged edges and multiple penetrations through its surface.",
+  "objects": [
+    {
+      "label": "damaged_floor_panel",
+      "bbox": [
+        30,
+        215,
+        490,
+        320
+      ],
+      "attributes": [
+        "dark_gray_black_color",
+        "irregular_shape",
+        "torn_edges",
+        "multiple_holes",
+        "flat_surface",
+        "deteriorated",
+        "structural_damage"
+      ]
+    },
+    {
+      "label": "large_hole_left",
+      "bbox": [
+        45,
+        285,
+        85,
+        310
+      ],
+      "attributes": [
+        "circular_opening",
+        "penetration",
+        "left_side"
+      ]
+    },
+    {
+      "label": "large_hole_right",
+      "bbox": [
+        355,
+        260,
+        395,
+        290
+      ],
+      "attributes": [
+        "circular_opening",
+        "penetration",
+        "right_side"
+      ]
+    },
+    {
+      "label": "central_depression",
+      "bbox": [
+        150,
+        245,
+        320,
+        295
+      ],
+      "attributes": [
+        "recessed_area",
+        "structural_void",
+        "rectangular"
+      ]
+    }
+  ],
+  "spatial_relationships": [
+    {
+      "a": "large_hole_left",
+      "b": "large_hole_right",
+      "relation": "opposite_sides_of_panel"
+    },
+    {
+      "a": "central_depression",
+      "b": "damaged_floor_panel",
+      "relation": "recessed_into_center"
+    },
+    {
+      "a": "large_hole_left",
+      "b": "central_depression",
+      "relation": "left_of"
+    },
+    {
+      "a": "large_hole_right",
+      "b": "central_depression",
+      "relation": "right_of"
+    }
+  ],
+  "room_layout_estimate": {
+    "primary_zones": [
+      {
+        "zone": "damaged_floor_section",
+        "objects": [
+          "damaged_floor_panel",
+          "large_hole_left",
+          "large_hole_right",
+          "central_depression"
+        ]
+      }
+    ],
+    "dominant_orientation": "horizontal_planar",
+    "walkable_area_pixels": 0
+  },
+  "captioning_enhanced_insights": {
+    "probable_activity": "destroyed_or_battle_damaged_infrastructure",
+    "tidiness_level": "destroyed",
+    "lighting_condition": "neutral_studio_lighting",
+    "functional_affordances": [
+      "non_functional_due_to_damage",
+      "hazardous_surface",
+      "structural_failure",
+      "impassable"
+    ]
+  },
+  "version": "2.1.0"
+}
