@@ -1,0 +1,43 @@
+{
+  "image_summary": "A description of the overall scene",
+  
+  "objects": [
+    {
+      "label": "object_name",
+      "bbox": [x_min, y_min, x_max, y_max],
+      "attributes": ["attribute1", "attribute2"]
+    }
+  ],
+
+  "spatial_relationships": [
+    {
+      "a": "object1",
+      "b": "object2",
+      "relation": "relation_type"
+    }
+  ],
+
+  "room_layout_estimate": {
+    "primary_zones": [
+      {
+        "zone": "zone_name",
+        "objects": ["object1", "object2"]
+      }
+    ],
+    "dominant_orientation": "orientation_description",
+    "walkable_area_pixels": 0
+  },
+
+  "captioning_enhanced_insights": {
+    "probable_activity": "activity_description",
+    "tidiness_level": "tidiness_description",
+    "lighting_condition": "lighting_description",
+    "functional_affordances": [
+      "affordance1",
+      "affordance2"
+    ]
+  },
+
+  "version": "2.1.0"
+}
+
