@@ -16,7 +16,6 @@ import math
 import os
 import time
 import pickle
-from PIL import Image
 import random
 import json
 
@@ -150,7 +149,7 @@ def setup_nodes(output_path, capturing_material_alpha: bool = False, basic_light
         # alpha values are not sRGB, and so that we perform ambient+diffuse
         # lighting in linear RGB space.
         color_node = tree.nodes.new(type="CompositorNodeConvertColorSpace")
-        color_node.from_color_space = "Linear"
+        color_node.from_color_space = "Linear Rec.709"  # Blender 4.x uses "Linear Rec.709" instead of "Linear"
         color_node.to_color_space = "sRGB"
         tree.links.new(raw_color_socket, color_node.inputs[0])
         color_socket = color_node.outputs[0]
@@ -209,14 +208,19 @@ def setup_material_extraction_shader_for_material(mat, capturing_material_alpha:
     socket_map = {}
     for input in bsdf_node.inputs:
         socket_map[input.name] = input
-    for name in ["Base Color", "Emission", "Emission Strength", "Alpha", "Specular"]:
+    
+    # Blender 4.x renamed "Emission" to "Emission Color"
+    emission_name = "Emission Color" if "Emission Color" in socket_map else "Emission"
+    specular_name = "Specular IOR Level" if "Specular IOR Level" in socket_map else "Specular"
+    
+    for name in ["Base Color", emission_name, "Emission Strength", "Alpha"]:
         assert name in socket_map.keys(), f"{name} not in {list(socket_map.keys())}"
 
     old_base_color = get_socket_value(mat.node_tree, socket_map["Base Color"])
     old_alpha = get_socket_value(mat.node_tree, socket_map["Alpha"])
-    old_emission = get_socket_value(mat.node_tree, socket_map["Emission"])
+    old_emission = get_socket_value(mat.node_tree, socket_map[emission_name])
     old_emission_strength = get_socket_value(mat.node_tree, socket_map["Emission Strength"])
-    old_specular = get_socket_value(mat.node_tree, socket_map["Specular"])
+    old_specular = get_socket_value(mat.node_tree, socket_map[specular_name]) if specular_name in socket_map else (None, 0.0)
 
     # Make sure the base color of all objects is black and the opacity
     # is 1, so that we are effectively just telling the shader what color
@@ -225,16 +229,17 @@ def setup_material_extraction_shader_for_material(mat, capturing_material_alpha:
     socket_map["Base Color"].default_value = [0, 0, 0, 1]
     clear_socket_input(mat.node_tree, socket_map["Alpha"])
     socket_map["Alpha"].default_value = 1
-    clear_socket_input(mat.node_tree, socket_map["Specular"])
-    socket_map["Specular"].default_value = 0.0
+    if specular_name in socket_map:
+        clear_socket_input(mat.node_tree, socket_map[specular_name])
+        socket_map[specular_name].default_value = 0.0
 
     old_blend_method = mat.blend_method
     mat.blend_method = "OPAQUE"
 
     if capturing_material_alpha:
-        set_socket_value(mat.node_tree, socket_map["Emission"], old_alpha)
+        set_socket_value(mat.node_tree, socket_map[emission_name], old_alpha)
     else:
-        set_socket_value(mat.node_tree, socket_map["Emission"], old_base_color)
+        set_socket_value(mat.node_tree, socket_map[emission_name], old_base_color)
     clear_socket_input(mat.node_tree, socket_map["Emission Strength"])
     socket_map["Emission Strength"].default_value = 1.0
 
@@ -242,9 +247,10 @@ def setup_material_extraction_shader_for_material(mat, capturing_material_alpha:
         mat.blend_method = old_blend_method
         set_socket_value(mat.node_tree, socket_map["Base Color"], old_base_color)
         set_socket_value(mat.node_tree, socket_map["Alpha"], old_alpha)
-        set_socket_value(mat.node_tree, socket_map["Emission"], old_emission)
+        set_socket_value(mat.node_tree, socket_map[emission_name], old_emission)
         set_socket_value(mat.node_tree, socket_map["Emission Strength"], old_emission_strength)
-        set_socket_value(mat.node_tree, socket_map["Specular"], old_specular)
+        if specular_name in socket_map:
+            set_socket_value(mat.node_tree, socket_map[specular_name], old_specular)
 
     return undo_fn
 
@@ -512,15 +518,15 @@ for uid in uid_paths:
     _, ext = os.path.splitext(path)
     ext = ext.lower()
     if ext == ".obj":
-        bpy.ops.import_scene.obj(filepath=path)
+        bpy.ops.wm.obj_import(filepath=path)
     elif ext in [".glb", ".gltf"]:
         bpy.ops.import_scene.gltf(filepath=path)
     elif ext == ".stl":
-        bpy.ops.import_mesh.stl(filepath=path)
+        bpy.ops.wm.stl_import(filepath=path)
     elif ext == ".fbx":
         bpy.ops.import_scene.fbx(filepath=path)
     elif ext == ".ply":
-        bpy.ops.import_mesh.ply(filepath=path)
+        bpy.ops.wm.ply_import(filepath=path)
     else:
         raise RuntimeError(f"unexpected extension: {ext}")
     load_time.append(time.time() - t_load)
