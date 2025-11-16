@@ -1,11 +1,14 @@
 // Global state
 let currentFolders = [];
 let eventSource = null;
+let selectedFile = null;
+let currentTempDir = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     loadTemplates();
     setupTemplateToggle();
+    setupFileUpload();
 });
 
 // Load available templates
@@ -52,6 +55,77 @@ function setupTemplateToggle() {
             }
         });
     });
+}
+
+// Setup file upload (drag & drop and click)
+function setupFileUpload() {
+    const dropZone = document.getElementById('file-drop-zone');
+    const fileInput = document.getElementById('file-input');
+    
+    // Click to select file
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    // File selected via input
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+    
+    // Drag and drop handlers
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('drag-over');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files.length > 0) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+}
+
+// Handle file selection
+function handleFile(file) {
+    const allowedExtensions = ['.obj', '.glb', '.gltf', '.fbx', '.stl', '.ply', '.dae', '.blend', '.3ds', '.x3d'];
+    const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+    
+    if (!allowedExtensions.includes(ext)) {
+        alert(`File type not supported. Please use one of: ${allowedExtensions.join(', ')}`);
+        return;
+    }
+    
+    selectedFile = file;
+    
+    // Show file info
+    document.getElementById('file-drop-zone').style.display = 'none';
+    document.getElementById('file-info').style.display = 'block';
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-size').textContent = formatFileSize(file.size);
+}
+
+// Clear selected file
+function clearFile() {
+    selectedFile = null;
+    document.getElementById('file-drop-zone').style.display = 'block';
+    document.getElementById('file-info').style.display = 'none';
+    document.getElementById('file-input').value = '';
+}
+
+// Format file size
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
 }
 
 // Load template preview
@@ -192,7 +266,211 @@ function switchTab(tabName) {
     document.getElementById(`${tabName}-tab`).classList.add('active');
 }
 
-// Run script
+// Start processing (either upload or existing)
+async function startProcessing() {
+    const workflowType = document.querySelector('input[name="workflow_type"]:checked').value;
+    
+    if (workflowType === 'upload') {
+        await uploadAndProcess();
+    } else {
+        await runScript();
+    }
+}
+
+// Upload and process 3D file
+async function uploadAndProcess() {
+    if (!selectedFile) {
+        alert('Please select a 3D file to upload');
+        return;
+    }
+    
+    const apiKey = document.getElementById('api_key').value;
+    if (!apiKey) {
+        alert('Please enter your Claude API key');
+        return;
+    }
+    
+    // Gather configuration
+    const config = {
+        api_key: apiKey,
+        model: document.getElementById('model').value,
+        num_views: parseInt(document.getElementById('num_views').value),
+        max_tokens: parseInt(document.getElementById('max_tokens').value),
+        rate_limit_delay: parseFloat(document.getElementById('rate_limit_delay').value),
+        use_diffurank: document.getElementById('use_diffurank').checked
+    };
+    
+    // Handle template
+    const templateType = document.querySelector('input[name="template_type"]:checked').value;
+    if (templateType === 'file') {
+        config.template_file = document.getElementById('template_file').value;
+        config.use_inline_template = false;
+    } else {
+        const inlineText = document.getElementById('inline_template').value;
+        if (!inlineText) {
+            alert('Please enter template JSON');
+            return;
+        }
+        try {
+            config.inline_template = JSON.parse(inlineText);
+            config.use_inline_template = true;
+        } catch (error) {
+            alert('Invalid JSON in inline template: ' + error.message);
+            return;
+        }
+    }
+    
+    // Switch to progress tab
+    switchTab('progress');
+    
+    // Update UI
+    document.getElementById('run-btn').style.display = 'none';
+    document.getElementById('stop-btn').style.display = 'block';
+    
+    // Clear progress output
+    const progressOutput = document.getElementById('progress-output');
+    progressOutput.innerHTML = '<p class="progress-line">📤 Uploading file and starting processing...</p>';
+    
+    // Create FormData
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('config', JSON.stringify(config));
+    
+    try {
+        // Upload and start processing
+        const response = await fetch('/api/upload-and-process', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'started') {
+            currentTempDir = result.temp_dir;
+            progressOutput.innerHTML += '<p class="progress-line success">✓ File uploaded successfully!</p>';
+            progressOutput.innerHTML += '<p class="progress-line">Starting workflow...</p>';
+            
+            // Connect to progress stream
+            connectUploadProgressStream();
+        } else {
+            progressOutput.innerHTML += `<p class="progress-line error">Error: ${result.error || 'Unknown error'}</p>`;
+            resetRunButton();
+        }
+    } catch (error) {
+        progressOutput.innerHTML += `<p class="progress-line error">Error: ${error.message}</p>`;
+        resetRunButton();
+    }
+}
+
+// Connect to progress stream for upload workflow
+function connectUploadProgressStream() {
+    if (eventSource) {
+        eventSource.close();
+    }
+    
+    eventSource = new EventSource('/api/progress');
+    const progressOutput = document.getElementById('progress-output');
+    
+    eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === 'output') {
+            const line = document.createElement('p');
+            line.className = 'progress-line';
+            
+            // Color code based on content
+            if (data.data.includes('✓') || data.data.includes('Success')) {
+                line.className += ' success';
+            } else if (data.data.includes('✗') || data.data.includes('Error') || data.data.includes('Failed')) {
+                line.className += ' error';
+            }
+            
+            line.textContent = data.data;
+            progressOutput.appendChild(line);
+            progressOutput.scrollTop = progressOutput.scrollHeight;
+        } else if (data.type === 'complete' && data.data) {
+            // Display results
+            const line = document.createElement('p');
+            line.className = 'progress-line success';
+            line.textContent = '\n✓ Processing complete! Displaying results...';
+            progressOutput.appendChild(line);
+            
+            eventSource.close();
+            eventSource = null;
+            resetRunButton();
+            
+            // Display results
+            displayUploadResults(data.data);
+            
+            // Clean up temp directory
+            if (currentTempDir) {
+                cleanupTemp(currentTempDir);
+            }
+        } else if (data.type === 'error') {
+            const line = document.createElement('p');
+            line.className = 'progress-line error';
+            line.textContent = `\n✗ Error: ${data.data}`;
+            progressOutput.appendChild(line);
+            
+            eventSource.close();
+            eventSource = null;
+            resetRunButton();
+            
+            // Clean up temp directory
+            if (currentTempDir) {
+                cleanupTemp(currentTempDir);
+            }
+        }
+    };
+    
+    eventSource.onerror = function(error) {
+        console.error('EventSource error:', error);
+        eventSource.close();
+        eventSource = null;
+        resetRunButton();
+    };
+}
+
+// Display upload results
+function displayUploadResults(data) {
+    switchTab('viewer');
+    
+    const resultsViewer = document.getElementById('results-viewer');
+    const imagesGrid = document.getElementById('images-grid');
+    const jsonOutput = document.getElementById('json-output');
+    
+    resultsViewer.style.display = 'block';
+    
+    // Display images
+    imagesGrid.innerHTML = '';
+    data.images.forEach(img => {
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'image-item';
+        imgDiv.innerHTML = `
+            <img src="${img.data}" alt="${img.name}">
+            <p>${img.name}</p>
+        `;
+        imagesGrid.appendChild(imgDiv);
+    });
+    
+    // Display JSON
+    jsonOutput.textContent = JSON.stringify(data.json_output, null, 2);
+}
+
+// Clean up temporary directory
+async function cleanupTemp(tempDir) {
+    try {
+        await fetch('/api/cleanup', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({temp_dir: tempDir})
+        });
+    } catch (error) {
+        console.error('Cleanup error:', error);
+    }
+}
+
+// Run script (existing workflow)
 async function runScript() {
     const apiKey = document.getElementById('api_key').value;
     if (!apiKey) {

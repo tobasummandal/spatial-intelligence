@@ -8,6 +8,11 @@ Get up and running in 3 steps!
 pip install -r requirements.txt
 ```
 
+**For 3D file upload feature, also install Blender:**
+- macOS: `brew install blender` or download from [blender.org](https://www.blender.org/download/)
+- Linux: `sudo apt install blender`
+- Windows: Download from [blender.org](https://www.blender.org/download/)
+
 ## Step 2: Start the Web UI
 
 ```bash
@@ -31,10 +36,19 @@ A beautiful dark blue and gold interface with:
 
 ## First Run
 
-1. **Enter API Key**: Paste your Claude API key (from console.anthropic.com)
-2. **Set Directory**: Default is `./example_material` (or change to your data folder)
+### Option 1: Upload a 3D File (New! ✨)
+
+1. **Upload File**: Drag & drop your .obj, .glb, or other 3D file
+2. **Enter API Key**: Paste your Claude API key (from console.anthropic.com)
 3. **Choose Template**: Use `example_template.json` or create your own
-4. **Click Run**: Watch real-time progress as images are processed!
+4. **Click "Start Processing"**: File will be rendered and processed automatically!
+
+### Option 2: Process Existing Renders
+
+1. **Select "Process Existing Renders"** radio button
+2. **Enter API Key**: Paste your Claude API key
+3. **Set Directory**: Point to folder with Cap3D_imgs/
+4. **Click "Start Processing"**: Process pre-rendered images
 
 ## Example Template
 

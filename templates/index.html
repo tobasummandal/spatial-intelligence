@@ -16,6 +16,34 @@
         <div class="main-content">
             <!-- Configuration Panel -->
             <div class="panel config-panel">
+                <h2>Upload 3D File</h2>
+                
+                <div class="upload-section">
+                    <div class="file-drop-zone" id="file-drop-zone">
+                        <div class="upload-icon">📦</div>
+                        <p>Drag & drop your 3D file here</p>
+                        <p class="upload-hint">or click to browse</p>
+                        <p class="file-formats">Supported: .obj, .glb, .gltf, .fbx, .stl, .ply, .dae, .blend, .3ds, .x3d</p>
+                        <input type="file" id="file-input" accept=".obj,.glb,.gltf,.fbx,.stl,.ply,.dae,.blend,.3ds,.x3d" style="display: none;">
+                    </div>
+                    <div id="file-info" class="file-info" style="display:none;">
+                        <p><strong>Selected file:</strong> <span id="file-name"></span></p>
+                        <p><strong>Size:</strong> <span id="file-size"></span></p>
+                        <button class="btn-secondary btn-small" onclick="clearFile()">✕ Clear</button>
+                    </div>
+                </div>
+
+                <div class="workflow-toggle">
+                    <label>
+                        <input type="radio" name="workflow_type" value="upload" checked>
+                        Upload & Process 3D File
+                    </label>
+                    <label>
+                        <input type="radio" name="workflow_type" value="existing">
+                        Process Existing Renders
+                    </label>
+                </div>
+
                 <h2>Configuration</h2>
                 
                 <div class="form-group">
@@ -96,8 +124,8 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button class="btn-primary" onclick="runScript()" id="run-btn">
-                        ▶ Run Generation
+                    <button class="btn-primary" onclick="startProcessing()" id="run-btn">
+                        ▶ Start Processing
                     </button>
                     <button class="btn-danger" onclick="stopScript()" id="stop-btn" style="display:none;">
                         ⬛ Stop
